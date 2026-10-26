@@ -8,7 +8,8 @@ A tiny, production-ready Java application that classifies a triangle based on it
 
 ## Tech stack
 
-- **Java 25**: use modern language features where they help readability (records, sealed types, pattern matching, switch expressions, `var` when the type is obvious).
+- **Java 25**: use modern language features where they help readability (records, sealed types, pattern matching, switch expressions).
+- **Never use `var`**: always declare the explicit type of local variables.
 - **Maven** is the only build tool, always run through the Maven wrapper (`./mvnw`), never a locally installed `mvn`.
 - **No frameworks**: no Spring, Quarkus, Micronaut, Lombok, etc. Use the JDK standard library. A test library (JUnit 5, plus AssertJ if useful) is the only expected dependency. Ask before adding any other dependency.
 - **No formatting or static analysis plugins** (Spotless, Checkstyle, etc.).
