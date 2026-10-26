@@ -1,11 +1,11 @@
-package com.example.triangle;
+package com.bms.triangle;
 
-import com.example.triangle.classification.InvalidTriangleException;
-import com.example.triangle.classification.Triangle;
-import com.example.triangle.classification.TriangleType;
-import com.example.triangle.input.InvalidInputException;
-import com.example.triangle.input.SideLengths;
-import com.example.triangle.input.SideLengthsParser;
+import com.bms.triangle.classification.InvalidTriangleException;
+import com.bms.triangle.classification.Triangle;
+import com.bms.triangle.classification.TriangleType;
+import com.bms.triangle.input.InvalidInputException;
+import com.bms.triangle.input.SideLengths;
+import com.bms.triangle.input.SideLengthsParser;
 
 public final class TriangleClassifierApplication {
 

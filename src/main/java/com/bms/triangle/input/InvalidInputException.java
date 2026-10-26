@@ -1,4 +1,4 @@
-package com.example.triangle.input;
+package com.bms.triangle.input;
 
 public final class InvalidInputException extends RuntimeException {
 

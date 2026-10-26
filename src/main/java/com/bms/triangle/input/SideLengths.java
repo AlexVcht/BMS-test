@@ -1,4 +1,4 @@
-package com.example.triangle.input;
+package com.bms.triangle.input;
 
 import java.math.BigDecimal;
 

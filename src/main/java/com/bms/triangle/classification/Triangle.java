@@ -1,4 +1,4 @@
-package com.example.triangle.classification;
+package com.bms.triangle.classification;
 
 import java.math.BigDecimal;
 
