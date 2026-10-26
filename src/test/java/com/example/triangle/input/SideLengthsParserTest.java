@@ -90,24 +90,33 @@ class SideLengthsParserTest {
     }
 
     @Test
-    void truncatesVeryLongInvalidValueInErrorMessage() {
-        String veryLongValue = "x".repeat(100_000);
+    void acceptsValueOfExactlyOneHundredCharacters() {
+        String oneHundredCharacters = "1." + "0".repeat(98);
+
+        SideLengths sideLengths = SideLengthsParser.parse(new String[] {"3", "4", oneHundredCharacters});
+
+        assertEquals(new BigDecimal(oneHundredCharacters), sideLengths.thirdSide());
+    }
+
+    @Test
+    void rejectsValueLongerThanOneHundredCharactersAndTruncatesItInErrorMessage() {
+        String veryLongNumber = "1".repeat(100_000);
 
         InvalidInputException exception = assertThrows(InvalidInputException.class,
-                () -> SideLengthsParser.parse(new String[] {"3", veryLongValue, "5"}));
+                () -> SideLengthsParser.parse(new String[] {"3", veryLongNumber, "5"}));
 
-        assertTrue(exception.getMessage().contains("'" + "x".repeat(30) + "...' (100000 characters)"));
+        assertTrue(exception.getMessage().contains("Side length 2 is longer than 100 characters"));
+        assertTrue(exception.getMessage().contains("'" + "1".repeat(30) + "...' (100000 characters)"));
         assertTrue(exception.getMessage().length() < 200);
     }
 
     @Test
-    void truncatesVeryLongNumberInDigitLimitErrorMessage() {
-        String veryLongNumber = "1".repeat(100_000);
+    void truncatesLongNumberInDigitLimitErrorMessage() {
+        String longNumber = "1".repeat(41);
 
         InvalidInputException exception = assertThrows(InvalidInputException.class,
-                () -> SideLengthsParser.parse(new String[] {"3", "4", veryLongNumber}));
+                () -> SideLengthsParser.parse(new String[] {"3", "4", longNumber}));
 
-        assertTrue(exception.getMessage().contains("'" + "1".repeat(30) + "...' (100000 characters)"));
-        assertTrue(exception.getMessage().length() < 200);
+        assertTrue(exception.getMessage().contains("'" + "1".repeat(30) + "...' (41 characters)"));
     }
 }

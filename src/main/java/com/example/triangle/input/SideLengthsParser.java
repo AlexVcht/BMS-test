@@ -8,6 +8,7 @@ public final class SideLengthsParser {
     private static final int EXPECTED_ARGUMENT_COUNT = 3;
     private static final int MAXIMUM_INTEGER_DIGITS = 20;
     private static final int MAXIMUM_DECIMAL_DIGITS = 20;
+    private static final int MAXIMUM_ARGUMENT_LENGTH = 100;
     private static final int MAXIMUM_ARGUMENT_LENGTH_IN_MESSAGE = 30;
 
     // Plain decimal notation only: no exponent (e.g. 1e9), no comma, ASCII digits only.
@@ -30,6 +31,11 @@ public final class SideLengthsParser {
     }
 
     private static BigDecimal parseSideLength(String argument, int position) {
+        // Checked before parsing: building a BigDecimal from hundreds of thousands of digits takes seconds.
+        if (argument != null && argument.length() > MAXIMUM_ARGUMENT_LENGTH) {
+            throw new InvalidInputException("Side length " + position + " is longer than " + MAXIMUM_ARGUMENT_LENGTH
+                    + " characters: " + quoteForMessage(argument) + ".");
+        }
         if (argument == null || !PLAIN_DECIMAL_NUMBER.matcher(argument).matches()) {
             throw new InvalidInputException("Side length " + position + " is not a valid number: " + quoteForMessage(argument)
                     + ". Use plain decimal notation with a dot as decimal separator, e.g. 3.5.");

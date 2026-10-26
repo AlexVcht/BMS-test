@@ -46,6 +46,9 @@
     </dependencies>
 
     <build>
+        <!-- Stable jar name, matching the usage message printed by the application -->
+        <finalName>triangle-classifier</finalName>
+
         <pluginManagement>
             <plugins>
                 <plugin>

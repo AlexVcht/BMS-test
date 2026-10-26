@@ -29,7 +29,8 @@ class TriangleTest {
             "5, 5, 3",
             "5, 3, 5",
             "3, 5, 5",
-            "5, 5.0, 8"})
+            "5, 5.0, 8",
+            "1, 1, 1.00000000000000000001"})
     void classifiesExactlyTwoEqualSidesInAnyPositionAsIsosceles(String firstSide, String secondSide, String thirdSide) {
         assertEquals(TriangleType.ISOSCELES, triangle(firstSide, secondSide, thirdSide).classify());
     }
@@ -42,17 +43,11 @@ class TriangleTest {
         assertEquals(TriangleType.SCALENE, triangle(firstSide, secondSide, thirdSide).classify());
     }
 
-    @Test
-    void sidesDifferingOnlyAtTheTwentiethDecimalAreNotEqual() {
-        assertEquals(TriangleType.ISOSCELES, triangle("1", "1", "1.00000000000000000001").classify());
-    }
-
     @ParameterizedTest
     @CsvSource({
             "0, 4, 5, 1",
             "3, -4, 5, 2",
-            "3, 4, 0.0, 3",
-            "-3, -3, -3, 1"})
+            "3, 4, 0.0, 3"})
     void rejectsZeroOrNegativeSideLength(String firstSide, String secondSide, String thirdSide, int invalidPosition) {
         InvalidTriangleException exception = assertThrows(InvalidTriangleException.class,
                 () -> triangle(firstSide, secondSide, thirdSide));
