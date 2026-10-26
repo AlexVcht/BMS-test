@@ -40,7 +40,6 @@ Each side length must be:
 
 - a plain decimal number using a dot as decimal separator, such as `3`, `4.5` or `+2.25` (no exponent like `1e3`, no comma like `3,5`);
 - at most 100 characters long;
-- at most 20 digits before and 20 digits after the decimal point (leading zeros and trailing zeros after the decimal point do not count);
 - greater than zero.
 
 The three sides must also form a triangle: the sum of any two sides must be strictly greater than the third. Sides like `1 2 3` form a flat line and are rejected.

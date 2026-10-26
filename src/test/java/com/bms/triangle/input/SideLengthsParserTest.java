@@ -15,8 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SideLengthsParserTest {
 
-    private static final String TWENTY_DIGITS = "12345678901234567890";
-
     @Test
     void parsesThreeValidNumbersIncludingDecimals() {
         SideLengths sideLengths = SideLengthsParser.parse(new String[]{"3", "4.5", "0.000001"});
@@ -26,13 +24,8 @@ class SideLengthsParserTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-            "0", "-3", "+3",
-            TWENTY_DIGITS,
-            "0." + TWENTY_DIGITS,
-            TWENTY_DIGITS + "." + TWENTY_DIGITS,
-            "1.0000000000000000000000000",
-            "0000000000000000000000001"})
-    void acceptsPlainNumberWithinDigitLimits(String validValue) {
+            "0", "-3", "+3", "007", "1.000", "12345678901234567890.12345678901234567890"})
+    void acceptsPlainDecimalNumber(String validValue) {
         SideLengths sideLengths = SideLengthsParser.parse(new String[]{"3", validValue, "5"});
 
         assertEquals(new BigDecimal(validValue), sideLengths.secondSide());
@@ -75,22 +68,6 @@ class SideLengthsParserTest {
     }
 
     @Test
-    void rejectsMoreThanTwentyDigitsBeforeDecimalPoint() {
-        InvalidInputException exception = assertThrows(InvalidInputException.class,
-                () -> SideLengthsParser.parse(new String[]{"3", "4", "1" + TWENTY_DIGITS}));
-
-        assertTrue(exception.getMessage().contains("Side length 3 has more than 20 digits before the decimal point"));
-    }
-
-    @Test
-    void rejectsMoreThanTwentyDigitsAfterDecimalPoint() {
-        InvalidInputException exception = assertThrows(InvalidInputException.class,
-                () -> SideLengthsParser.parse(new String[]{"0." + TWENTY_DIGITS + "1", "4", "5"}));
-
-        assertTrue(exception.getMessage().contains("Side length 1 has more than 20 digits after the decimal point"));
-    }
-
-    @Test
     void acceptsValueOfExactlyOneHundredCharacters() {
         String oneHundredCharacters = "1." + "0".repeat(98);
 
@@ -100,24 +77,12 @@ class SideLengthsParserTest {
     }
 
     @Test
-    void rejectsValueLongerThanOneHundredCharactersAndTruncatesItInErrorMessage() {
+    void rejectsValueLongerThanOneHundredCharactersWithoutEchoingIt() {
         String veryLongNumber = "1".repeat(100_000);
 
         InvalidInputException exception = assertThrows(InvalidInputException.class,
                 () -> SideLengthsParser.parse(new String[]{"3", veryLongNumber, "5"}));
 
-        assertTrue(exception.getMessage().contains("Side length 2 is longer than 100 characters"));
-        assertTrue(exception.getMessage().contains("'" + "1".repeat(30) + "...' (100000 characters)"));
-        assertTrue(exception.getMessage().length() < 200);
-    }
-
-    @Test
-    void truncatesLongNumberInDigitLimitErrorMessage() {
-        String longNumber = "1".repeat(41);
-
-        InvalidInputException exception = assertThrows(InvalidInputException.class,
-                () -> SideLengthsParser.parse(new String[]{"3", "4", longNumber}));
-
-        assertTrue(exception.getMessage().contains("'" + "1".repeat(30) + "...' (41 characters)"));
+        assertEquals("Side length 2 is longer than 100 characters (100000 characters).", exception.getMessage());
     }
 }
