@@ -7,7 +7,12 @@ import com.bms.triangle.input.InvalidInputException;
 import com.bms.triangle.input.SideLengths;
 import com.bms.triangle.input.SideLengthsParser;
 
+import java.io.PrintStream;
+
 public final class TriangleClassifierApplication {
+
+    static final int SUCCESS_EXIT_CODE = 0;
+    static final int ERROR_EXIT_CODE = 1;
 
     private static final String USAGE = "Usage: java -jar triangle-classifier.jar <side1> <side2> <side3>";
 
@@ -15,20 +20,26 @@ public final class TriangleClassifierApplication {
     }
 
     public static void main(String[] arguments) {
+        System.exit(run(arguments, System.out, System.err));
+    }
+
+    // Separated from main so the printed output and exit code can be tested without exiting the JVM.
+    static int run(String[] arguments, PrintStream output, PrintStream error) {
         try {
             SideLengths sideLengths = SideLengthsParser.parse(arguments);
             Triangle triangle = new Triangle(sideLengths.firstSide(), sideLengths.secondSide(), sideLengths.thirdSide());
             TriangleType triangleType = triangle.classify();
 
-            System.out.println(triangleType.displayName());
+            output.println(triangleType.displayName());
+            return SUCCESS_EXIT_CODE;
 
         } catch (InvalidInputException exception) {
-            System.err.println("Error: " + exception.getMessage());
-            System.err.println(USAGE);
-            System.exit(1);
+            error.println("Error: " + exception.getMessage());
+            error.println(USAGE);
+            return ERROR_EXIT_CODE;
         } catch (InvalidTriangleException exception) {
-            System.err.println("Error: " + exception.getMessage());
-            System.exit(1);
+            error.println("Error: " + exception.getMessage());
+            return ERROR_EXIT_CODE;
         }
     }
 }
