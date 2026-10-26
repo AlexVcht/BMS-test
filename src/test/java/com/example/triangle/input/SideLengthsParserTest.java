@@ -88,4 +88,26 @@ class SideLengthsParserTest {
 
         assertTrue(exception.getMessage().contains("Side length 1 has more than 20 digits after the decimal point"));
     }
+
+    @Test
+    void truncatesVeryLongInvalidValueInErrorMessage() {
+        String veryLongValue = "x".repeat(100_000);
+
+        InvalidInputException exception = assertThrows(InvalidInputException.class,
+                () -> SideLengthsParser.parse(new String[] {"3", veryLongValue, "5"}));
+
+        assertTrue(exception.getMessage().contains("'" + "x".repeat(30) + "...' (100000 characters)"));
+        assertTrue(exception.getMessage().length() < 200);
+    }
+
+    @Test
+    void truncatesVeryLongNumberInDigitLimitErrorMessage() {
+        String veryLongNumber = "1".repeat(100_000);
+
+        InvalidInputException exception = assertThrows(InvalidInputException.class,
+                () -> SideLengthsParser.parse(new String[] {"3", "4", veryLongNumber}));
+
+        assertTrue(exception.getMessage().contains("'" + "1".repeat(30) + "...' (100000 characters)"));
+        assertTrue(exception.getMessage().length() < 200);
+    }
 }
